@@ -6,6 +6,11 @@ from django_filters.views import FilterView
 from .models import DiaryEntry
 from .forms import DiaryEntryForm
 from .filters import DiaryEntryFilter
+import json
+import csv
+from django.http import HttpResponse
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class EntryListView(LoginRequiredMixin, FilterView):
     model = DiaryEntry
@@ -51,3 +56,36 @@ class EntryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         entry = self.get_object()
         return self.request.user == entry.user
+
+
+class ExportJSONView(LoginRequiredMixin, View):
+    def get(self, request):
+        entries = DiaryEntry.objects.filter(user=request.user)
+        data = list(entries.values('title', 'content', 'created_at', 'tags', 'is_public'))
+        response = HttpResponse(
+            json.dumps(data, ensure_ascii=False, default=str, indent=2),
+            content_type='application/json'
+        )
+        response['Content-Disposition'] = 'attachment; filename="diary_entries.json"'
+        return response
+
+
+class ExportCSVView(LoginRequiredMixin, View):
+    def get(self, request):
+        entries = DiaryEntry.objects.filter(user=request.user)
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
+        response['Content-Disposition'] = 'attachment; filename="diary_entries.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['ID', 'Заголовок', 'Содержание', 'Теги', 'Публичная', 'Создано'])
+
+        for entry in entries:
+            writer.writerow([
+                entry.id,
+                entry.title,
+                entry.content[:100] + '...' if len(entry.content) > 100 else entry.content,
+                ', '.join(entry.tags) if entry.tags else '',
+                'Да' if entry.is_public else 'Нет',
+                entry.created_at.strftime('%d.%m.%Y %H:%M')
+            ])
+        return response
