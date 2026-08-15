@@ -1,5 +1,4 @@
 # utils/email.py
-from django.conf import settings
 
 
 def send_email_notification(user, entry):

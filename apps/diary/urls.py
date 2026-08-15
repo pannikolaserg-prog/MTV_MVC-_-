@@ -1,5 +1,8 @@
 ﻿from django.urls import path
-from .views import EntryListView, EntryDetailView, EntryCreateView, EntryUpdateView, EntryDeleteView, ExportJSONView, ExportCSVView
+
+from .views import (EntryCreateView, EntryDeleteView, EntryDetailView,
+                    EntryListView, EntryUpdateView, ExportCSVView,
+                    ExportJSONView)
 
 app_name = 'diary'
 

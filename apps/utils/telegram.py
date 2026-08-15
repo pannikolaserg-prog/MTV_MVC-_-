@@ -1,6 +1,7 @@
 import requests
 from django.conf import settings
 
+
 def send_telegram_message(chat_id, text):
     token = settings.TELEGRAM_BOT_TOKEN
     if not token:

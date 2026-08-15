@@ -1,15 +1,18 @@
-﻿from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
-from django.contrib import messages
-from django_filters.views import FilterView
-from django.views import View
-from django.http import HttpResponse
-from .models import DiaryEntry
-from .forms import DiaryEntryForm
-from .filters import DiaryEntryFilter
+﻿import csv
 import json
-import csv
+
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponse
+from django.urls import reverse_lazy
+from django.views import View
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from django_filters.views import FilterView
+
+from .filters import DiaryEntryFilter
+from .forms import DiaryEntryForm
+from .models import DiaryEntry
+
 
 class EntryListView(LoginRequiredMixin, FilterView):
     model = DiaryEntry

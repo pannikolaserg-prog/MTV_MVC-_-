@@ -1,6 +1,8 @@
 ﻿from rest_framework import serializers
+
 from apps.diary.models import DiaryEntry
 from apps.users.models import User
+
 
 class DiaryEntrySerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
