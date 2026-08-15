@@ -1,0 +1,73 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}{{ entry.title }} - Личный дневник{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">{{ entry.title }}</h3>
+                    {% if entry.is_public %}
+                        <span class="badge bg-success">Публичная</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Приватная</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="bi bi-person-circle"></i> {{ entry.user.username }}
+                            <span class="mx-2">|</span>
+                            <i class="bi bi-calendar-date"></i> {{ entry.created_at|date:"d.m.Y H:i" }}
+                            {% if entry.updated_at != entry.created_at %}
+                                <span class="mx-2">|</span>
+                                <i class="bi bi-pencil"></i> обновлено {{ entry.updated_at|date:"d.m.Y H:i" }}
+                            {% endif %}
+                        </small>
+                    </div>
+
+                    <hr>
+
+                    <div class="entry-content mt-3">
+                        {{ entry.content|linebreaks }}
+                    </div>
+
+                    {% if entry.tags %}
+                        <div class="mt-4">
+                            <strong><i class="bi bi-tags"></i> Теги:</strong>
+                            {% for tag in entry.tags %}
+                                <span class="badge bg-info text-dark me-1">#{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mt-4">
+                        <small class="text-muted">
+                            <i class="bi bi-eye"></i> {{ entry.views|default:0 }} просмотров
+                            <span class="mx-2">|</span>
+                            <i class="bi bi-chat"></i> 0 комментариев
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'diary:entry_list' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Назад
+                        </a>
+                        {% if user == entry.user or user.is_staff %}
+                            <a href="{% url 'diary:entry_update' entry.pk %}" class="btn btn-warning">
+                                <i class="bi bi-pencil"></i> Редактировать
+                            </a>
+                            <a href="{% url 'diary:entry_delete' entry.pk %}" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Удалить
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

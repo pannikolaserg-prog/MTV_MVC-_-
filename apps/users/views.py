@@ -9,10 +9,10 @@ class UserLoginView(LoginView):
     redirect_authenticated_user = True
 
 class UserLogoutView(LogoutView):
-    next_page = 'login'
+    next_page = 'users:login'
 
 class UserRegistrationView(CreateView):
     model = User
     form_class = UserRegistrationForm
     template_name = 'users/register.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('users:login')

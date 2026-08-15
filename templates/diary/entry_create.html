@@ -1,0 +1,82 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Новая запись{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-plus-lg"></i> Новая запись</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle"></i> Пожалуйста, исправьте ошибки ниже.
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">
+                                {{ form.title.label }}
+                            </label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.content.id_for_label }}" class="form-label fw-bold">
+                                {{ form.content.label }}
+                            </label>
+                            {{ form.content }}
+                            {% if form.content.errors %}
+                                <div class="text-danger small">{{ form.content.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.tags.id_for_label }}" class="form-label fw-bold">
+                                {{ form.tags.label }}
+                            </label>
+                            {{ form.tags }}
+                            <small class="text-muted d-block">Введите теги через запятую</small>
+                            {% if form.tags.errors %}
+                                <div class="text-danger small">{{ form.tags.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.is_public }}
+                            <label for="{{ form.is_public.id_for_label }}" class="form-check-label">
+                                {{ form.is_public.label }}
+                            </label>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.allow_comments }}
+                            <label for="{{ form.allow_comments.id_for_label }}" class="form-check-label">
+                                {{ form.allow_comments.label }}
+                            </label>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> Сохранить
+                            </button>
+                            <a href="{% url 'diary:entry_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
