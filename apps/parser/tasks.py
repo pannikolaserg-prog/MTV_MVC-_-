@@ -1,5 +1,7 @@
 ﻿from celery import shared_task
+
 from .parsers import NewsParser
+
 
 @shared_task
 def parse_news_task(url):

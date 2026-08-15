@@ -1,5 +1,6 @@
 ﻿from django.db import models
 
+
 class ParsedNews(models.Model):
     title = models.CharField(max_length=500)
     url = models.URLField()
