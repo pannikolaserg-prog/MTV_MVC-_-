@@ -1,6 +1,4 @@
-﻿version: '3.8'
-
-services:
+﻿services:
   db:
     image: postgres:15
     container_name: diary_db
@@ -27,7 +25,9 @@ services:
   web:
     build: .
     container_name: diary_web
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./src:/app
     ports:
@@ -45,18 +45,6 @@ services:
       DB_PORT: 5432
       REDIS_URL: redis://redis:6379/0
       DEBUG: "True"
-
-  nginx:
-    image: nginx:alpine
-    container_name: diary_nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./src/static:/app/static
-      - ./src/media:/app/media
-      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - web
 
 volumes:
   postgres_data:
